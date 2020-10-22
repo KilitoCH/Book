@@ -66,4 +66,31 @@ public class TestRunner {
 ```
 public class TestResult extends Object
 ```
-​TestResult ​类收集所有执行测试案例的结果。它是收集参数层面的一个实例。这个实验框架区分失败和错误。失败是可以预料的并且可以通过假设来检查。错误是不可预料的问题就像 ​ArrayIndexOutOfBoundsException​。​TestResult​ 类的一些重要方法列式如下：
+​TestResult ​类收集所有执行测试案例的结果。它是收集参数层面的一个实例。这个实验框架区分失败和错误。失败是可以预料的并且可以通过假设来检查。错误是不可预料的。
+
+### TestSuite类
+* 通过使用注解@suite和注解@RunWith
+* 通过TestSuite类我们可以同时运行许多的测试用例，下面这段代码即可说明：
+```java
+import junit.framework.*;
+public class JunitTestSuite {
+   public static void main(String[] a) {
+      // add the test's in the suite
+      TestSuite suite = new TestSuite(TestJunit1.class, TestJunit2.class, TestJunit3.class );
+      TestResult result = new TestResult();
+      suite.run(result);
+      System.out.println("Number of test cases = " + result.runCount());
+    }
+}
+```
+这样我们可以把不同的测试用例写在不同的测试类里。
+
+### Annotation
+|  Annotation  |                               描述                                |
+| :----------: | :---------------------------------------------------------------: |
+|    @Test     |                      将这个方法作为测试案例                       |
+| @BeforeClass |    在所有方法的前面运行,需要注意的是这个只在程序最开始运行一次    |
+|   @Before    | 在@Test方法的前面运行，每个@Test方法执行之前都会执行@Before的方法 |
+| @AfterClass  |     在所有方法的后面运行,需要注意的是这个只在程序最后运行一次     |
+|    @After    | 在@Test方法的后面运行，每个@Test方法执行之后都会执行@After的方法  |
+
