@@ -17,11 +17,12 @@
 |   optimal    |      adj.      |    最佳的     |
 | Bibliography |       n.       |   参考书目    |
 |    entry     |       n.       |     条目      |
+|   preamble   |       n.       |     前言      |
 
 ## ApacheBench
-|    Words     | Part of speech |  Translation  |
-| :----------: | :------------: | :-----------: |
-| concurrency  |       n.       |     并发      |
-| denote  |       v.       |     表示      |
-| expertise  |       n.       |     专长      |
+|    Words    | Part of speech | Translation |
+| :---------: | :------------: | :---------: |
+| concurrency |       n.       |    并发     |
+|   denote    |       v.       |    表示     |
+|  expertise  |       n.       |    专长     |
 
