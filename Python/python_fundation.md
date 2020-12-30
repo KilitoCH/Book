@@ -220,6 +220,41 @@ alist_3 = [m + n for m in 'ABC' for n in 'XYZ']
 ### 迭代器
 iter()方法，用这个方法作用于Iterable对象可以把他变成Iterator对象，区别在于Iterable对象不能用next()方法取下一个。
 
+### 函数重载
+python作为动态语言，想传递什么类型的参数就传递什么，但是python3中提供了一个注解帮助限制参数类型，语法如下：
+```python
+def func(argv: [Type]):
+    pass
+```
+这样的语法能够限制argv必须是指定的`[Type]`类型，否则就会在运行时抛出类型异常，这就相当于对参数类型进行了严格限制。但是原本python是动态类型的，原本传什么类型都可以，现在只能传一种，这就产生了很大的限制。这就产生了重载的问题。
+python对于重载给出了解决的办法，在python3.5之前，引入`Typing`包之后重载函数。在Python3.5之后`typing`已经成为了标准库的一部分，直接import就可。重载有两种方案：
+* 使用`typing.TypeVar`。这个可以解决参数个数不变，只需要更改参数类型的情况。参考代码如下：
+    ```python
+    import typing
+
+    T = typing.TypeVar('T',int,float,str)
+
+    def foo(name: T):
+        pass
+    ```
+    这样`name`就可以接收三个类型的参数，实现了函数的重载。
+* 使用`typing.overload`，顾名思义，这就是函数的重载。使用时作为一个装饰符。
+    ```python
+    import typing
+
+    @typing.overload
+    def foo(name: str):
+        pass
+    
+    @typing.overload
+    def foo(name: float):
+        pass
+    
+    def foo(name,age = 24):
+        do something
+    ```
+    初看非常惊喜（其实没啥用，还不如就写一个再检查……，而且python用list、map作为参数，真的需要这么花哨的玩意吗），后来才发现这玩意完全没用，就是欺骗代码检查工具的！！！最后这个没有装饰器的函数会覆盖上面所有的，只有他才是有用的。
+
 ## 函数式编程
 首先，python中有个很好的东西，函数可以作为变量传到别的函数或者变量里头。这个其实有点像Lambda表达式（这不废话，因为lambda表达式就是函数式编程的内容啊！！！）举个栗子：
 ```python
@@ -306,8 +341,59 @@ def my_function(x):
 也就是说在使用了lambda关键字之后，后面跟的是自变量，再后面跟的是返回值。不需要定义函数的名称。
 当然lambda表达式定义出来的函数也可以被赋值给别的变量，然后用别的变量来调用：`f = lambda x: x + 1`。然后用`f(1)`调用。
 
-### 装饰器（没咋看懂，放一放）
-但是在这个部分学到一个很有用的知识：每个函数都有一个`__name__`变量，可以用来看一个变量装的到底是什么函数。(lambda函数赋值之后，打印会看到函数名为`<lambda>`)
+### 装饰器
+这个东西吧，我暂时觉得是为了让代码好看，简洁。或者说是在改代码的时候可以少改点，直接作为注解加到需要增加功能的方法上就行了，不需要很麻烦的再单独修改每个方法的实现。
+那么什么是装饰器呢？其实就像装修，原来的房子已经有了，装修就是让房子变得更好看，更多功能。装饰器的执行过程就是把函数作为“装饰器”这个函数的参数传进去，看个例子：
+```python
+def log(func):
+    def wrapper(*arg,**kwarg):
+        print('Call:%s' % func.__name__)
+        return func(*arg,*kwarg)
+    return wrapper
+
+@log
+def foo(intVal):
+    print(intVal)
+```
+分析上面这个例子，这个log函数就是一个装饰器，他包含一个叫wrapper的方法，为什么叫装饰器的精髓就在这了。
+1. 先不管这个注解是怎么工作的，我们关心一下这个`wrapper(*arg,**kwarg)`方法，你会看到他**返回了传入了参数集的func()的结果**，这意味着什么呢，这意味着 **`wrapper()`取代了`func()`**，我们调用`wrapper()`等同于调用`func()`
+2. 然后再看`log()`方法返回了啥，惊了，他返回了一个wrapper！！！注意，返回的不是`wrapper()`，而是`wrapper`。也就是说他返回了一个函数，而不是一个结果，那么等于说这么操作之后，就只是相当于在func执行前多执行了一句`print('Call:%s' % func.__name__)`，然后把他打包成新的方法返回给你。
+3. 2之后，我们就会发现，加了这个注解，相当于是执行了这么一个语句：`foo = log(foo)`。那么问题就来了，这样注解之后，foo就不再是他自己了，他变成了wrapper!这时候再去查看foo的类型，会发现控制台打印：`<function log.<locals>.wrapper at 0x000001DBD1013310>`。foo被夺舍了，他不再是自己了。就好像我们直接执行了语句`foo = wrapper`一样。
+4. 那么有没有什么方法让foo还是他自己呢，一种想法是把原本的信息都写给`wrapper`，这有点暴力难写。python提供了一个方法：在wrapper前面加个注解：`functools.wraps(arg)`，这里面的`arg`就是要把wrapper包装成的函数，在本例中就是被“夺舍”的foo,代码如下：
+    ```python
+    import functools
+
+    def log(func):
+        @functools.wraps(foo)
+        def wrapper(*arg,**kwarg):
+            print('Call:%s' % func.__name__)
+            return func(*arg,*kwarg)
+    return wrapper
+    ```
+    执行之后再看foo的类型，结果：`<function foo at 0x000001F117FD3310>`。Amazing！！！foo又回来了。
+
+上述装饰器其实已经非常的amazing了，但是这有个问题，log也没法接收别的参数，每个需要装饰的方法都只能执行一样的动作，没法做出区分。为了能够给每个使用装饰器的方法再传点参数，需要用到如下语法：
+```python
+import functools
+
+def decorator(val: str):
+    print(val)
+    def log(func):
+        @functools.wraps(foo)
+        def wrapper(*arg,**kwarg):
+            print('Call:%s' % func.__name__)
+            return func(*arg,*kwarg)
+    return wrapper
+return log
+
+@decorator('Hello decorator')
+def foo():
+    pass
+```
+这样整了之后会发现decorator这个注解也可以带参数了，这样写等效于：`foo = decorator(val)(foo)`，也就是说拿到参数之后decorator就变成了log了，最后跟上述装饰器本质上没啥区别，只是一种语法糖而已。
+
+
+在这个部分学到一个很有用的知识：每个函数都有一个`__name__`变量，可以用来看一个变量装的到底是什么函数。(lambda函数赋值之后，打印会看到函数名为`<lambda>`)
 
 ### 偏函数
 当函数的参数个数太多，需要简化时，使用functools.partial可以创建一个新的函数，这个新函数可以固定住原函数的部分参数，从而在调用时更简单。
