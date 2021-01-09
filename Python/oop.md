@@ -18,7 +18,7 @@ class My_class(object):
 ...
 #实例化上述类
 #不需要new关键字，也不需要传入self，只需要传后面的几个参数就可以了
-my_class = Myclass(*args)
+my_class = My_class(*args)
 ```
 与其他任何oop的设计模式一样，变量可以有getter和setter方法，按照规范需要定义为`set_variable`和`get_variable`。
 
