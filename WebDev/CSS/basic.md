@@ -175,4 +175,4 @@ a:visited {
 * 绝对定位，设定`position: absolute;`，这样他们会无视其他元素，假装这个父组件中只有自己。仍可指定他相对父元素的位置，但是其他元素已经没办法对他们产生影响。
 * `z-index`属性，当元素重叠之后我们可以通过设定这个“相对值”来控制这些元素的相对层叠顺序。他们的层叠次序只取决于值的相对大小。
 * 固定定位，设定`position: fixed;`，这与绝对定位的区别为绝对定位是相对父组件。但是固定定位是相对与整个页面，也就是相对于`html`根元素。这样再设定其位置时就会绝对固定。可以用这种方式固定导航栏等。
-* 还有一种很神奇的方式，设定`position: sticky;`，可以使元素贴在屏幕上的固定位置。当元素尚未到达设定位置时他很像一个相对定位元素。但是当元素到达时其将变为固定位置。[参考位置](https://developer.mozilla.org/zh-CN/docs/Learn/CSS/CSS_layout/Positioning#position_sticky)
+* 还有一种很神奇的方式，设定`position: sticky;`，可以使元素贴在屏幕上的固定位置。当元素尚未到达设定位置时他很像一个相对定位元素。但是当元素到达时其将变为固定位置。[参考位置](https://developer.mozilla.org/zh-CN/docs/Learn/CSS/CSS_layout/Positioning#position_sticky)那么吧v和将很快n'h'j'k'm'n'm'h'jnhjkmnmhj    
