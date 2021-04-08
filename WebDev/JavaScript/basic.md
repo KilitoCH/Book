@@ -11,3 +11,12 @@ js中的数组类似于其他语言中的集合，特别是python里的。
 * `unshift() & shift()`方法，分别是在数组头删除和添加元素。
 
 ## JavaScript模块
+
+## 在js中处理文件
+
+相关接口：`File`和`Blob`。其中`File`继承自`Blob`。可以使用他们相关的方法来操作、读取文件。
+利用这两个类和一些H5特性，我们可以实现在网页中读取、拖拽选择文件等。
+
+参考：[在web应用程序中使用文件](https://developer.mozilla.org/zh-CN/docs/Web/API/File/Using_files_from_web_applications)。
+[Blob](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)
+[File](https://developer.mozilla.org/zh-CN/docs/Web/API/File)

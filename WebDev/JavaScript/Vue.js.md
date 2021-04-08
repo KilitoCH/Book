@@ -106,3 +106,12 @@ data: {
   
 * `router-push`依赖于页面上的`router-view`和`routers`表。页面的路由层次取决于路由表中书写的层次。
 * `slot`类似于“留白”。即在组件中留出一定的余地，当有需要时再在引用这个组件的时候“填充进去”。
+* `$emit`&`prop`分别为子组件向父组件传值和传递方法的方法。
+
+## Vue JS Crash Course 2021/Youtube
+
+### Notes
+* `Fetch API`
+* `async await` 
+
+* `json-server`
